@@ -53,6 +53,16 @@ To regenerate the site's document data after editing any codex file:
 node tools/build-data.mjs
 ```
 
+(The deploy workflows also run this automatically, so the published site always
+reflects the markdown.)
+
+## Pull request previews
+
+Every PR opened from a branch in this repository is deployed to
+`https://karacayir.github.io/epistemic-commons/preview/pr-<number>/` — the link is
+posted as a comment on the PR, refreshed on every push, and removed when the PR
+closes. PRs from forks do not get previews.
+
 ## Data provenance
 
 Every document records its authoritative source (legislation.gov.uk, parliament.uk).

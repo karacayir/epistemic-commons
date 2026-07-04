@@ -1,0 +1,37 @@
+name: PR preview
+
+# Deploys a preview of the site for every pull request from a branch in this
+# repository, at /preview/pr-<number>/ on the Pages site. The preview is
+# updated on every push and removed when the PR is closed. PRs from forks do
+# not get previews (the token is read-only there, by design).
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pr-preview-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile codices into site data
+        if: github.event.action != 'closed'
+        run: node tools/build-data.mjs
+
+      - name: Deploy or remove preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: site
+          preview-branch: gh-pages
+          umbrella-dir: preview
+          action: auto
