@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Epistemic Commons — the state, under version control</title>
+<meta name="description" content="Every constitution, law and policy as a living public record: attributed, reviewable, reversible.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/commons.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%231c1a15'/%3E%3Crect x='8' y='12' width='4' height='12' rx='2' fill='%23f6f4ee'/%3E%3Crect x='14' y='8' width='4' height='16' rx='2' fill='%235b78ec'/%3E%3Crect x='20' y='12' width='4' height='12' rx='2' fill='%23f6f4ee'/%3E%3C/svg%3E">
+</head>
+<body>
+<script src="data/documents.js"></script>
+<script src="data/metrics.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/md.js"></script>
+<script>
+(function () {
+  const docs = EC.documents, codices = EC.codices;
+  const inscriptions = docs.reduce((n, d) => n + d.inscriptions.length, 0);
+  const years = docs.flatMap(d => d.inscriptions.map(i => parseInt(i.date, 10))).filter(Boolean);
+  const span = Math.max(...years) - Math.min(...years);
+
+  const GLOSSARY = [
+    ["Codex", "repository", "A governed body of related law — the constitution, the rights charter, the electoral machinery. The codex is the ground truth: if it is not in the codex, it is not the law."],
+    ["Inscription", "commit", "An immutable, attributed record of change: who, what, when, why. History is never rewritten, only extended."],
+    ["Motion", "pull request", "A proposed amendment moving through the chambers. Small and legible by rule — never an omnibus."],
+    ["Chamber", "branch", "A stage of scrutiny: commons, lords, assent. The statute branch is the official, in-force text."],
+    ["Petition", "issue", "A citizen-raised request. 10,000 signatures oblige a response; 100,000 oblige a debate and a reasoned answer."],
+    ["Assent", "review", "The recorded judgement on a motion: Aye or Nay, attached permanently to the name that cast it."],
+    ["Sponsor", "contributor", "A person who authored, carried or forced a change. Magna Carta lists the barons; every act lists its ministers."],
+    ["Enactment", "merge", "The moment a motion enters the statute branch and becomes law — with royal assent as the final chamber."],
+  ];
+
+  const codexCards = codices.map(c => `
+    <a class="card" style="padding:22px" href="codex.html?key=${c.key}">
+      <div class="overline">${c.stats.from}–${c.stats.to}</div>
+      <h3 style="margin:8px 0 6px">${c.title}</h3>
+      <p style="font-size:0.88rem;color:var(--ink-2)">${c.description}</p>
+      <div style="display:flex;gap:14px;margin-top:16px;font-family:var(--mono);font-size:0.74rem;color:var(--ink-3)">
+        <span>${c.stats.documents} documents</span>
+        <span>${c.stats.inscriptions} inscriptions</span>
+      </div>
+    </a>`).join("");
+
+  const m = EC.metrics.headline;
+  const tile = (t) => `
+    <div class="card stat-tile">
+      <div class="label">${t.label}</div>
+      <div class="value">${t.value}</div>
+      <div class="src">${t.period} · ${t.source}</div>
+    </div>`;
+
+  EC.shell("index.html", `
+  <main>
+    <section class="hero wrap">
+      <div class="overline" style="color:var(--ultramarine)">The Rationalist Manifesto · polity/uk · PR preview build</div>
+      <h1 style="margin-top:16px">The state, under version&nbsp;control.</h1>
+      <p class="lede">Every constitution, law and policy as a living public record — every change
+      attributed, every approval inscribed, every citizen a reviewer. Epistemic Commons is
+      governance rebuilt on the discipline software learned twenty years ago.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="manifesto.html">Read the manifesto</a>
+        <a class="btn btn-ghost" href="codices.html">Browse the codices</a>
+        <a class="btn btn-ghost" href="observatory.html">Open the Observatory</a>
+      </div>
+      <div style="display:flex;gap:34px;margin-top:52px;flex-wrap:wrap">
+        ${[
+          [codices.length, "codices"],
+          [docs.length, "documents transcribed"],
+          [inscriptions, "inscriptions of change"],
+          [span + " years", "of recorded history"],
+        ].map(([v, l]) => `<div><div class="serif" style="font-size:1.9rem;font-weight:600">${v}</div><div style="font-size:0.8rem;color:var(--ink-3)">${l}</div></div>`).join("")}
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head">
+          <h2>How change moves</h2>
+          <div class="more" style="color:var(--ink-3);font-weight:500;font-size:0.88rem">No change reaches the statute branch without passing every chamber in the open.</div>
+        </div>
+        <div class="pipeline">
+          <div class="stage"><div class="s-name"><span class="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--ultramarine)"></span>petition</div><div class="s-desc">A citizen raises it. Thresholds create obligations.</div></div>
+          <div class="stage"><div class="s-name"><span class="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--ultramarine)"></span>motion</div><div class="s-desc">A small, legible amendment is drafted in public.</div></div>
+          <div class="stage"><div class="s-name"><span class="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--commons)"></span>commons</div><div class="s-desc">Debated, amended, voted. Every Aye and Nay recorded.</div></div>
+          <div class="stage"><div class="s-name"><span class="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--lords)"></span>lords</div><div class="s-desc">Reviewed, revised, delayed if needed.</div></div>
+          <div class="stage"><div class="s-name"><span class="cdot" style="width:8px;height:8px;border-radius:50%;background:var(--assent-gold)"></span>assent</div><div class="s-desc">The final chamber signs the enactment.</div></div>
+          <div class="stage final"><div class="s-name">statute</div><div class="s-desc">The official branch. The law as it is, with all its history.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head">
+          <h2>A vocabulary of its own</h2>
+          <div class="more" style="color:var(--ink-3);font-weight:500;font-size:0.88rem">Law is not code. It deserves its own words.</div>
+        </div>
+        <div class="grid cols-4">
+          ${GLOSSARY.map(([term, was, def]) => `
+            <div class="card glossary-item">
+              <div class="term">${term}</div>
+              <div class="was">for: ${was}</div>
+              <p>${def}</p>
+            </div>`).join("")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head">
+          <h2>The codices of the United Kingdom</h2>
+          <a class="more" href="codices.html">All codices →</a>
+        </div>
+        <div class="grid cols-3">${codexCards}</div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head">
+          <h2>The Observatory</h2>
+          <a class="more" href="observatory.html">Full dashboard →</a>
+        </div>
+        <p class="lede" style="max-width:60ch;margin-bottom:26px">A government that cannot be measured cannot
+        be judged. The nation's vital signs, sourced and comparable.</p>
+        <div class="grid cols-4">
+          ${tile(m.gdpLevel)}${tile(m.netMigration)}${tile(m.hdi)}${tile(m.emissions)}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap" style="max-width:820px;text-align:center;padding:26px 28px 10px">
+        <div class="serif" style="font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.35;font-style:italic">
+        “Sunlight is not merely a disinfectant but a compiler — a nation that can read its own
+        source code will, over time, debug itself.”</div>
+        <div class="overline" style="margin-top:20px">The Rationalist Manifesto · § V</div>
+      </div>
+    </section>
+  </main>`);
+})();
+</script>
+</body>
+</html>
