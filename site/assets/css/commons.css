@@ -258,7 +258,14 @@ section.band + section.band { border-top: 1px solid var(--hairline); }
 .filelist a.row:hover { background: var(--ultramarine-wash); text-decoration: none; }
 .filelist .row .doc-title { font-weight: 600; font-size: 0.95rem; }
 .filelist .row .doc-meta { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3); }
+.filelist .row .doc-main { flex: 1 1 0; min-width: 0; }
 .filelist .row .spacer { flex: 1; }
+.filelist .row .doc-side { display: flex; align-items: center; gap: 16px; flex: none; }
+.filelist .row .doc-stats { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3); text-align: right; }
+
+/* sponsor avatars · stats · custodian — on codex cards and codex headers */
+.codex-meta { display: flex; align-items: center; gap: 16px 26px; margin-top: 20px; flex-wrap: wrap; }
+.codex-meta .custodian { margin-left: auto; }
 
 /* ---------- inscription timeline ---------- */
 
@@ -559,10 +566,23 @@ details.data-table th { color: var(--ink-3); font-weight: 600; }
   .doc-facts { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
   .prose h2 { font-size: 1.32rem; }
   .site-footer .cols { gap: 26px; }
+
+  /* meta rows stack vertically instead of competing for one line */
+  .codex-meta { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .codex-meta .custodian { margin-left: 0; }
+
+  /* document rows reflow: title block on top, stats + badge on their own line */
+  .filelist .row { flex-wrap: wrap; row-gap: 10px; padding: 14px 18px; }
+  .filelist .row .spacer { display: none; }
+  .filelist .row .doc-side { flex-basis: 100%; justify-content: space-between; }
+  .filelist .row .doc-stats { text-align: left; }
 }
 
 @media (max-width: 520px) {
   .wordmark .polity-tag { display: none; }
+
+  /* facts blocks (manifesto, documents) become a single readable column */
+  .doc-facts { grid-template-columns: 1fr; }
 
   /* chamber pills become a 2×2 grid of individual pills */
   .chambers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
