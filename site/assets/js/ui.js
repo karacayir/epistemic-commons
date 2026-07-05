@@ -33,8 +33,19 @@ window.EC = window.EC || {};
           <span class="polity-tag">polity/uk</span>
         </a>
         <nav class="primary">${links}</nav>
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" onclick="EC.toggleNav(this)">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M2 4.5h14M2 9h14M2 13.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
     </header>`;
+  };
+
+  EC.toggleNav = function (btn) {
+    const header = btn.closest(".site-header");
+    const open = header.classList.toggle("nav-open");
+    btn.setAttribute("aria-expanded", String(open));
   };
 
   EC.footer = function () {
