@@ -155,7 +155,12 @@
     </section>
   </main>`);
 
-  /* ---------- charts ---------- */
+  /* ---------- charts (re-rendered on resize so phones get full-size text) ---------- */
+  const CHART_IDS = ["c-gdp", "c-trade", "c-mig", "c-life", "c-gini", "c-pisa", "c-emis", "c-hdi", "c-hdirank"];
+
+  function renderCharts() {
+  CHART_IDS.forEach((id) => { document.getElementById(id).innerHTML = ""; });
+
   const g = M.gdpGrowthSeries;
   EC.charts.column(document.getElementById("c-gdp"), {
     labels: g.years, values: g.values,
@@ -172,6 +177,7 @@
     labelIdx: [0, 1],
     tipLabels: ["Exports (" + M.trade.exportsGrowth + " on year)", "Imports (" + M.trade.importsGrowth + " on year)"],
     xTitle: "Flow", yTitle: "£bn, " + M.trade.period, height: 230,
+    margins: { l: 58 },
   });
 
   const mig = M.netMigrationSeries;
@@ -258,6 +264,16 @@
     min: 0.91, max: 0.98, ticks: [0.92, 0.94, 0.96, 0.98],
     fmt: (v) => v.toFixed(2),
     labelWidth: 150, rowTitle: "Polity",
+  });
+  }
+
+  renderCharts();
+
+  let lastW = innerWidth, resizeTimer;
+  addEventListener("resize", () => {
+    if (Math.abs(innerWidth - lastW) < 40) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { lastW = innerWidth; renderCharts(); }, 150);
   });
 })();
 </script>
