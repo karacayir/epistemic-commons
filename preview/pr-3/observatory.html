@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Observatory — Epistemic Commons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/commons.css">
+<meta name="description" content="The vital signs of the nation — sourced, dated and comparable across polities.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Epistemic Commons">
+<meta property="og:title" content="The Observatory — Epistemic Commons">
+<meta property="og:description" content="The vital signs of the nation — sourced, dated and comparable across polities.">
+<meta property="og:url" content="https://karacayir.github.io/epistemic-commons/observatory.html">
+<meta property="og:image" content="https://karacayir.github.io/epistemic-commons/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Epistemic Commons — the state, under version control">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Observatory — Epistemic Commons">
+<meta name="twitter:description" content="The vital signs of the nation — sourced, dated and comparable across polities.">
+<meta name="twitter:image" content="https://karacayir.github.io/epistemic-commons/assets/og-cover.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%231c1a15'/%3E%3Cg transform='translate(16 16) scale(0.86) translate(-16 -16)' fill='none' stroke='%23f6f4ee' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.5 8 L6.5 16 L11.5 24'/%3E%3Cpath d='M20.5 8 L25.5 16 L20.5 24'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%235b78ec'/%3E%3C/svg%3E">
+</head>
+<body data-palette="#2f4bd8,#1e7a55,#b27c1e,#b03a5b,#6e56c9,#0f91bd">
+<script src="data/documents.js"></script>
+<script src="data/metrics.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/md.js"></script>
+<script src="assets/js/charts.js"></script>
+<script>
+(function () {
+  const M = EC.metrics;
+  const S1 = "#2f4bd8", S2 = "#1e7a55", S4 = "#b03a5b", GRAY = "#b5b0a4";
+
+  function tile(t, spark) {
+    const deltaCls = { good: "good", bad: "bad" }[t.dir] || "flat";
+    return `
+    <div class="card stat-tile">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+        <div class="label">${t.label}</div>
+        ${spark ? EC.charts.sparkline(spark, S1) : ""}
+      </div>
+      <div class="value">${t.value}</div>
+      ${t.delta ? `<div class="delta ${deltaCls}">${t.delta}</div>` : ""}
+      <div class="src">${t.period} · ${t.source}</div>
+    </div>`;
+  }
+
+  function chartCard(id, title, sub, src) {
+    return `
+    <div class="card chart-card">
+      <h3>${title}</h3>
+      <div class="sub">${sub}</div>
+      <div id="${id}"></div>
+      <div class="src">${src}</div>
+    </div>`;
+  }
+
+  const H = M.headline;
+
+  EC.shell("observatory.html", `
+  <main>
+    <div class="wrap page-head">
+      <div class="crumbs"><a href="index.html">Epistemic Commons</a> / polity/uk / observatory</div>
+      <h1>The Observatory</h1>
+      <p class="lede" style="max-width:62ch;margin-top:14px">The vital signs of the United Kingdom —
+      sourced from the national statistics that produce them, cited on every panel, comparable with
+      every other polity. Compiled ${EC.fmtDate(M.compiled)}.</p>
+    </div>
+
+    <section class="band" style="padding-top:10px">
+      <div class="wrap">
+        <div class="overline" style="margin-bottom:16px">Economy</div>
+        <div class="grid cols-4">
+          ${tile(H.gdpLevel)}
+          ${tile(H.gdpGrowth, M.gdpGrowthSeries.values)}
+          ${tile(H.inflation)}
+          ${tile(H.unemployment)}
+        </div>
+        <div class="grid cols-2" style="margin-top:20px">
+          ${chartCard("c-gdp", "Real GDP growth", "Annual % change, 2019–2025 · the pandemic collapse and recovery", "ONS quarterly national accounts, June 2026")}
+          ${chartCard("c-trade", "Trade in goods and services", M.trade.period + " · total trade deficit £" + (M.trade.imports - M.trade.exports).toFixed(1) + "bn", "ONS / DBT, UK trade in numbers")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="overline" style="margin-bottom:16px">People</div>
+        <div class="grid cols-4">
+          ${tile(H.population)}
+          ${tile(H.netMigration, M.netMigrationSeries.values)}
+          ${tile(H.lifeExpectancy)}
+          ${tile(H.hdi)}
+        </div>
+        <div class="grid cols-2" style="margin-top:20px">
+          ${chartCard("c-mig", "Net migration", "Year ending June, thousands · 2025 provisional", "ONS long-term international migration, Nov 2025")}
+          ${chartCard("c-life", "Life expectancy at birth", "Rolling three-year periods, UK", "ONS national life tables, 2022–24 (Dec 2025)")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="overline" style="margin-bottom:16px">Society · Education · Safety</div>
+        <div class="grid cols-4">
+          ${tile(H.gini)}
+          ${tile(H.homicides)}
+          ${tile(H.turnout)}
+          <div class="card stat-tile">
+            <div class="label">Homicide rate (E&amp;W)</div>
+            <div class="value">8.6 <small>per million</small></div>
+            <div class="delta good">lowest since 1977</div>
+            <div class="src">YE Mar 2025 · ONS homicide statistics</div>
+          </div>
+        </div>
+        <div class="grid cols-2" style="margin-top:20px">
+          ${chartCard("c-gini", "Income inequality", "Gini coefficient of disposable household income, % · below its pre-pandemic level", "ONS household income inequality, FYE 2024")}
+          ${chartCard("c-pisa", "Education — PISA 2022", "Mean scores, UK vs OECD average · UK above average in all three domains", "OECD PISA 2022 (latest cycle)")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="overline" style="margin-bottom:16px">Environment</div>
+        <div class="grid cols-4">
+          ${tile(H.emissions)}
+          <div class="card stat-tile">
+            <div class="label">Emissions vs 1990 baseline</div>
+            <div class="value">−54%</div>
+            <div class="delta good">fastest reduction in the G7</div>
+            <div class="src">2024 territorial · DESNZ final figures</div>
+          </div>
+        </div>
+        <div class="grid cols-2" style="margin-top:20px">
+          ${chartCard("c-emis", "Greenhouse gas emissions", "Territorial emissions, indexed to 1990 = 100", "DESNZ final UK greenhouse gas emissions statistics, 1990–2024")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="overline" style="margin-bottom:16px">Standing among polities</div>
+        <div class="grid cols-2">
+          ${chartCard("c-hdi", "Human development, 1990–2023", "UNDP Human Development Index · UK against peer polities", "UNDP Human Development Report 2025, official time series")}
+          ${chartCard("c-hdirank", "HDI 2023 — where the UK stands", "Selected polities, value and world rank", "UNDP Human Development Report 2025")}
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="card" style="padding:26px 30px">
+          <div class="overline" style="margin-bottom:12px">Provenance</div>
+          <p style="font-size:0.88rem;color:var(--ink-2);max-width:76ch">Every figure on this page
+          carries its reference period and producing body. Headline values are taken directly from
+          the releases below; the GDP growth series reflects ONS revisions as published in June 2026.
+          Under this platform's rules, a revision is an inscription: the old value is never
+          overwritten, only superseded.</p>
+          <div class="grid cols-2" style="margin-top:16px;gap:6px 28px">
+            ${M.sources.map(s => `<div style="font-size:0.82rem">→ <a href="${s.url}" target="_blank" rel="noopener">${s.name}</a></div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>`);
+
+  /* ---------- charts (re-rendered on resize so phones get full-size text) ---------- */
+  const CHART_IDS = ["c-gdp", "c-trade", "c-mig", "c-life", "c-gini", "c-pisa", "c-emis", "c-hdi", "c-hdirank"];
+
+  function renderCharts() {
+  CHART_IDS.forEach((id) => { document.getElementById(id).innerHTML = ""; });
+
+  const g = M.gdpGrowthSeries;
+  EC.charts.column(document.getElementById("c-gdp"), {
+    labels: g.years, values: g.values,
+    color: S1, negColor: S4,
+    fmt: (v) => (v > 0 ? "+" : "") + v.toFixed(1) + "%",
+    labelIdx: [1, 2, g.values.length - 1],
+    xTitle: "Year", yTitle: "Real GDP growth",
+  });
+
+  EC.charts.column(document.getElementById("c-trade"), {
+    labels: ["Exports", "Imports"], values: [M.trade.exports, M.trade.imports],
+    colors: [S1, S2],
+    fmt: (v) => "£" + v.toFixed(0) + "bn",
+    labelIdx: [0, 1],
+    tipLabels: ["Exports (" + M.trade.exportsGrowth + " on year)", "Imports (" + M.trade.importsGrowth + " on year)"],
+    xTitle: "Flow", yTitle: "£bn, " + M.trade.period, height: 230,
+    margins: { l: 58 },
+  });
+
+  const mig = M.netMigrationSeries;
+  EC.charts.column(document.getElementById("c-mig"), {
+    labels: mig.labels, values: mig.values,
+    color: S1,
+    fmt: (v) => v.toLocaleString(),
+    unit: "thousand",
+    labelIdx: [0, 1, 2],
+    xTitle: "Year ending", yTitle: "Net migration (thousands)", height: 230,
+  });
+
+  const le = M.lifeExpectancy;
+  EC.charts.line(document.getElementById("c-life"), {
+    xLabels: le.periods,
+    series: [
+      { name: "Females", color: S1, values: le.female },
+      { name: "Males", color: S2, values: le.male },
+    ],
+    fmt: (v) => v.toFixed(1),
+    yMin: 77, yMax: 84, height: 240, endLabels: true,
+    margins: { l: 54 },
+    xTitle: "Period",
+  });
+
+  EC.charts.line(document.getElementById("c-gini"), {
+    xLabels: M.gini.labels,
+    series: [{ name: "Gini coefficient", color: S1, values: M.gini.values, area: true }],
+    fmt: (v) => v.toFixed(1) + "%",
+    yMin: 30, yMax: 37, height: 240,
+    xTitle: "Financial year ending",
+  });
+
+  EC.charts.dotPlot(document.getElementById("c-pisa"), {
+    items: M.pisa.subjects.map((s, i) => ({
+      label: s,
+      marks: [
+        { value: M.pisa.oecd[i], color: GRAY, name: "OECD average" },
+        { value: M.pisa.uk[i], color: S1, name: "United Kingdom" },
+      ],
+      valueLabel: String(M.pisa.uk[i]),
+    })),
+    min: 450, max: 520, ticks: [450, 470, 490, 510],
+    fmt: (v) => String(Math.round(v)),
+    labelWidth: 110, rowTitle: "Domain",
+    legendKeys: [
+      { name: "United Kingdom", color: S1, dot: true },
+      { name: "OECD average", color: GRAY, dot: true },
+    ],
+  });
+
+  EC.charts.column(document.getElementById("c-emis"), {
+    labels: M.emissions.labels, values: M.emissions.index,
+    color: S1,
+    fmt: (v) => String(v),
+    labelIdx: [0, 1],
+    tipLabels: ["1990 baseline (index 100)", "2024 — 371 MtCO₂e (index 46)"],
+    xTitle: "Year", yTitle: "Index (1990 = 100)", height: 230,
+  });
+
+  const hdi = M.hdiTrend;
+  EC.charts.line(document.getElementById("c-hdi"), {
+    xLabels: hdi.years,
+    series: [
+      { name: "United Kingdom", color: S1, values: hdi.uk },
+      ...Object.entries(hdi.peers).map(([name, values]) => ({ name, color: GRAY, values, deEmphasis: true })),
+    ],
+    legend: [
+      { name: "United Kingdom", color: S1 },
+      { name: "Peer polities", color: GRAY },
+    ],
+    fmt: (v) => v.toFixed(3),
+    yMin: 0.79, yMax: 0.98, height: 300, endLabels: true,
+    xTitle: "Year",
+  });
+
+  EC.charts.dotPlot(document.getElementById("c-hdirank"), {
+    items: M.hdiRank2023.map((c) => ({
+      label: c.label,
+      emphasis: !!c.emphasis,
+      marks: [{ value: c.value, color: c.emphasis ? S1 : GRAY, name: "HDI 2023" }],
+      valueLabel: c.emphasis ? c.value.toFixed(3) + "  ·  rank " + c.rank : "",
+    })),
+    min: 0.91, max: 0.98, ticks: [0.92, 0.94, 0.96, 0.98],
+    fmt: (v) => v.toFixed(2),
+    labelWidth: 150, rowTitle: "Polity",
+  });
+  }
+
+  renderCharts();
+
+  let lastW = innerWidth, resizeTimer;
+  addEventListener("resize", () => {
+    if (Math.abs(innerWidth - lastW) < 40) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { lastW = innerWidth; renderCharts(); }, 150);
+  });
+})();
+</script>
+</body>
+</html>

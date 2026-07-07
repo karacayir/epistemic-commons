@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rationalist Manifesto — Epistemic Commons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/commons.css">
+<meta name="description" content="A constitution for version-controlled government: every change visible, attributed, reviewable and reversible.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Epistemic Commons">
+<meta property="og:title" content="The Rationalist Manifesto — Epistemic Commons">
+<meta property="og:description" content="A constitution for version-controlled government: every change visible, attributed, reviewable and reversible.">
+<meta property="og:url" content="https://karacayir.github.io/epistemic-commons/manifesto.html">
+<meta property="og:image" content="https://karacayir.github.io/epistemic-commons/assets/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Epistemic Commons — the state, under version control">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Rationalist Manifesto — Epistemic Commons">
+<meta name="twitter:description" content="A constitution for version-controlled government: every change visible, attributed, reviewable and reversible.">
+<meta name="twitter:image" content="https://karacayir.github.io/epistemic-commons/assets/og-cover.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='8' fill='%231c1a15'/%3E%3Cg transform='translate(16 16) scale(0.86) translate(-16 -16)' fill='none' stroke='%23f6f4ee' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11.5 8 L6.5 16 L11.5 24'/%3E%3Cpath d='M20.5 8 L25.5 16 L20.5 24'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%235b78ec'/%3E%3C/svg%3E">
+</head>
+<body>
+<script src="data/documents.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/md.js"></script>
+<script>
+(function () {
+  const man = EC.manifesto;
+  // strip the H1, the italic subtitle line and the leading rule — the page header carries them
+  let body = man.body.replace(/^#\s.*\n/, "").trimStart();
+  body = body.replace(/^\*[^\n]+\*\n/, "").trimStart();
+  body = body.replace(/^---+\n/, "").trimStart();
+  EC.shell("manifesto.html", `
+  <main>
+    <div class="wrap page-head">
+      <div class="crumbs"><a href="index.html">Epistemic Commons</a> / manifesto</div>
+      <div class="overline" style="color:var(--ultramarine)">Founding document · version ${man.meta.version}</div>
+      <h1 style="margin-top:12px">The Rationalist Manifesto</h1>
+      <p class="lede" style="margin-top:14px">${man.meta.subtitle}</p>
+      <div class="doc-facts" style="max-width:760px">
+        <div class="fact"><div class="k">Status</div><div class="v">${man.meta.status}</div></div>
+        <div class="fact"><div class="k">Adopted</div><div class="v">${EC.fmtDate(man.meta.adopted)}</div></div>
+        <div class="fact"><div class="k">Source</div><div class="v"><span class="mono" style="font-size:0.78rem">manifesto/rationalist-manifesto.md</span></div></div>
+      </div>
+    </div>
+    <div class="wrap" style="padding-bottom:30px">
+      <article class="prose">${EC.md(body)}</article>
+    </div>
+  </main>`);
+})();
+</script>
+</body>
+</html>
