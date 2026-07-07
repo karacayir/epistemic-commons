@@ -69,7 +69,9 @@ EC.charts = (function () {
   };
 
   function frame(el, H, margins) {
-    const W = 640;
+    // draw at the container's real width so text stays legible on phones
+    const cw = el.getBoundingClientRect().width;
+    const W = Math.round(Math.max(300, Math.min(640, cw || 640)));
     const m = Object.assign({ t: 16, r: 18, b: 34, l: 46 }, margins || {});
     const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img" });
     el.appendChild(svg);

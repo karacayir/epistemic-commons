@@ -34,15 +34,15 @@
         <path d="M5 2.5h7.5L16 6v11.5H5z" stroke="#8b8579" stroke-width="1.4" stroke-linejoin="round"/>
         <path d="M12 2.5V6h3.5" stroke="#8b8579" stroke-width="1.4" stroke-linejoin="round"/>
       </svg>
-      <div style="min-width:0">
+      <div class="doc-main">
         <div class="doc-title">${d.title}</div>
-        <div class="doc-meta">${d.citation}${enacted ? " · enacted " + EC.fmtDate(enacted.date) : ""}</div>
+        <div class="doc-meta">${enacted ? "Enacted " + EC.fmtDate(enacted.date) : d.type}</div>
       </div>
       <div class="spacer"></div>
-      <div class="doc-meta" style="text-align:right">
-        ${d.inscriptions.length} inscriptions<br>latest ${EC.fmtDate(latest && latest.date)}
+      <div class="doc-side">
+        <div class="doc-stats">${d.inscriptions.length} inscriptions<br>latest ${EC.fmtDate(latest && latest.date)}</div>
+        ${EC.statusBadge(d.status)}
       </div>
-      ${EC.statusBadge(d.status)}
     </a>`;
   }).join("");
 
@@ -66,10 +66,10 @@
         </div>
       </div>
       <p class="lede" style="max-width:64ch;margin-top:14px">${codex.description}</p>
-      <div style="display:flex;gap:26px;align-items:center;margin-top:22px;flex-wrap:wrap">
+      <div class="codex-meta" style="margin-top:22px">
         <span class="avatar-stack">${sponsors.slice(0, 8).map(s => EC.avatar(s, 30)).join("")}</span>
         <span style="font-size:0.84rem;color:var(--ink-3)">${sponsors.length} sponsors · ${codex.stats.inscriptions} inscriptions · ${codex.stats.from}–${codex.stats.to}</span>
-        <span style="margin-left:auto;font-size:0.84rem;color:var(--ink-3)">Custodian: ${codex.custodian}</span>
+        <span class="custodian" style="font-size:0.84rem;color:var(--ink-3)">Custodian: ${codex.custodian}</span>
       </div>
     </div>
 
