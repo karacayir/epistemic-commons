@@ -19,7 +19,6 @@
   const cards = EC.codices.map(c => {
     const docs = EC.documents.filter(d => d.codex === c.key);
     const sponsors = [...new Set(docs.flatMap(d => d.sponsors.map(s => s.name)))];
-    const chips = docs.slice(0, 4).map(d => `<span class="chip">${d.citation || d.title}</span>`).join(" ");
     return `
     <a class="card" style="padding:26px" href="codex.html?key=${c.key}">
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -28,7 +27,6 @@
       </div>
       <h3 style="margin:12px 0 8px;font-size:1.42rem">${c.title}</h3>
       <p style="font-size:0.92rem;color:var(--ink-2);max-width:64ch">${c.description}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">${chips}</div>
       <div class="codex-meta">
         <span class="avatar-stack">${sponsors.slice(0, 5).map(s => EC.avatar(s, 28)).join("")}</span>
         <span style="font-size:0.78rem;color:var(--ink-3)">${sponsors.length} sponsors · ${c.stats.inscriptions} inscriptions · ${c.stats.from}–${c.stats.to}</span>

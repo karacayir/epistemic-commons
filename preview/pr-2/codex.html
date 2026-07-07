@@ -36,7 +36,7 @@
       </svg>
       <div class="doc-main">
         <div class="doc-title">${d.title}</div>
-        <div class="doc-meta">${d.citation}${enacted ? " · enacted " + EC.fmtDate(enacted.date) : ""}</div>
+        <div class="doc-meta">${enacted ? "Enacted " + EC.fmtDate(enacted.date) : d.type}</div>
       </div>
       <div class="spacer"></div>
       <div class="doc-side">
