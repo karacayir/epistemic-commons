@@ -5,9 +5,11 @@ window.EC = window.EC || {};
   const MARK_SVG = `
   <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
     <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="#1c1a15"/>
-    <rect x="8" y="12" width="4" height="12" rx="2" fill="#f6f4ee"/>
-    <rect x="14" y="8" width="4" height="16" rx="2" fill="#2f6fd8" style="fill:#5b78ec"/>
-    <rect x="20" y="12" width="4" height="12" rx="2" fill="#f6f4ee"/>
+    <g transform="translate(16 16) scale(0.84) translate(-16 -16)" stroke="#f6f4ee" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11.5 8 L6.5 16 L11.5 24"/>
+      <path d="M20.5 8 L25.5 16 L20.5 24"/>
+    </g>
+    <circle cx="16" cy="16" r="3" fill="#5b78ec"/>
   </svg>`;
 
   const NAV = [
